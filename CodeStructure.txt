@@ -1,0 +1,44 @@
+ipra-memory-simulator/
+│
+├── README.md
+├── requirements.txt
+├── main.py
+│
+├── config/
+│   └── simulation_config.py
+│
+├── core/
+│   ├── memory_manager.py
+│   ├── page_table.py
+│   ├── frame_allocator.py
+│   └── tlb.py
+│
+├── algorithms/
+│   ├── base_replacement.py
+│   ├── fifo.py
+│   ├── lru.py
+│   ├── optimal.py
+│   └── ipra.py
+│
+├── workload/
+│   ├── generator.py
+│   └── traces/
+│       └── sample_trace.txt
+│
+├── metrics/
+│   ├── stats_collector.py
+│   └── thrashing_detector.py
+│
+├── visualization/
+│   ├── plot_faults.py
+│   ├── plot_tlb.py
+│   └── plot_memory_usage.py
+│
+├── experiments/
+│   ├── run_baseline.py
+│   └── run_ipra.py
+│
+└── docs/
+    ├── design.md
+    ├── algorithms.md
+    └── results.md
