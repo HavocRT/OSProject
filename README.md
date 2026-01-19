@@ -5,3 +5,7 @@ Intelligent Page Replacement Algorithm using Working Set Prediction
 The project aims to simulate the working of various page replacement algorithms and analyze them using graphs to effectively conclude the overall performance and best case scenarious for each algorithm.
 
 It also aims to create a smart page replacement algorithm that can be used in operating systems that works on the concept of the working set model.
+
+# how-to-run
+run the main.py file using the following flags
+python main.py --algo [algorithm_name] --processes [number_of_processes] --frames [number_of_frames]
