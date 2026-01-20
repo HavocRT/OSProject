@@ -1,75 +1,84 @@
 import argparse
-from Algorithms.IPRA import IPRA
+
+from Simulator.MemorySimulator import MemorySimulator
+from Simulator.MemoryLogger import MemoryLogger
+from Workloads.WorkloadGenerator import WorkloadGenerator
+from Analytics.MetricsComputer import MetricsComputer
+from Analytics.PlotGenerator import PlotGenerator
+
 from Algorithms.FIFO import FIFO
 from Algorithms.LRU import LRU
+from Algorithms.Optimal import Optimal
+from Algorithms.IPRA import IPRA
 from Algorithms.TLB import TLB
-from Simulator.MemorySimulator import MemorySimulator
-from Logger.MemoryLogger import MemoryLogger
-from Workloads.WorkloadGenerator import WorkloadGenerator
-from Analysis.MetricsAnalyzer import MetricsAnalyzer
 
-def parseArguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--algo", required=True, choices=["fifo", "lru", "ipra"])
-    parser.add_argument("--processes", type=int, required=True)
-    parser.add_argument("--frames", type=int, required=True)
-    return parser.parse_args()
 
-def createAlgorithm(algoName, frameLimit):
+def buildAlgorithm(algoName, frameLimit, referenceString):
+    algoName = algoName.lower()
+
     if algoName == "fifo":
         return FIFO(frameLimit)
+
     if algoName == "lru":
         return LRU(frameLimit)
+
+    if algoName == "optimal":
+        return Optimal(frameLimit, referenceString)
+
     if algoName == "ipra":
-        return IPRA(frameLimit, windowSize=4)
+        return IPRA(frameLimit, windowSize=10)
 
-def generateProcessWorkloads(processCount):
-    generator = WorkloadGenerator()
-    workloads = []
+    raise ValueError("Unknown algorithm")
 
-    for i in range(processCount):
-        workload = generator.phaseChange(
-            phases=[[1, 2, 3], [4, 5, 6]],
-            repetitionsPerPhase=10
-        )
-        workloads.append(workload)
-
-    return workloads
-
-def interleaveWorkloads(workloads):
-    interleaved = []
-    maxLength = max(len(w) for w in workloads)
-
-    for i in range(maxLength):
-        for workload in workloads:
-            if i < len(workload):
-                interleaved.append(workload[i])
-
-    return interleaved
 
 def main():
-    args = parseArguments()
+    parser = argparse.ArgumentParser()
 
-    algorithm = createAlgorithm(args.algo, args.frames)
-    tlb = TLB(size=4)
+    parser.add_argument("--algo", required=True)
+    parser.add_argument("--frames", type=int, required=True)
+    parser.add_argument("--workload", required=True)
+    parser.add_argument("--length", type=int, required=True)
+    parser.add_argument("--tlb", type=int, default=0)
+
+    args = parser.parse_args()
+
+    referenceString = WorkloadGenerator.generate(
+        workloadType=args.workload,
+        length=args.length
+    )
+
+    algorithm = buildAlgorithm(
+        algoName=args.algo,
+        frameLimit=args.frames,
+        referenceString=referenceString
+    )
+
+    tlb = TLB(args.tlb) if args.tlb > 0 else None
     logger = MemoryLogger()
-    simulator = MemorySimulator(algorithm, tlb, logger)
 
-    workloads = generateProcessWorkloads(args.processes)
-    referenceString = interleaveWorkloads(workloads)
+    simulator = MemorySimulator(
+        algorithm=algorithm,
+        tlb=tlb,
+        logger=logger
+    )
 
-    for page in referenceString:
-        simulator.accessPage(page)
+    simulator.run(referenceString)
 
-    analyzer = MetricsAnalyzer(logger.getRecords())
+    metrics = MetricsComputer.compute(logger.records)
+    MetricsComputer.save(metrics, "output/metrics.txt")
 
-    print("Algorithm:", args.algo)
-    print("Processes:", args.processes)
-    print("Frames:", args.frames)
-    print("Total Page Faults:", analyzer.totalPageFaults())
-    print("Page Fault Rate:", analyzer.pageFaultRate())
-    print("TLB Hit Rate:", analyzer.tlbHitRate())
-    print("Average Working Set Size:", analyzer.averageWorkingSetSize())
+    PlotGenerator.generate(logger.records, outputDir="output")
+
+    print("Simulation completed")
+    print(f"Algorithm: {args.algo.upper()}")
+    print(f"Frames: {args.frames}")
+    print(f"Accesses: {args.length}")
+    print(f"Page Faults: {metrics['totalPageFaults']}")
+    print(f"Page Fault Rate: {metrics['pageFaultRate']:.3f}")
+
+    if tlb is not None:
+        print(f"TLB Hit Rate: {metrics['tlbHitRate']:.3f}")
+
 
 if __name__ == "__main__":
     main()
