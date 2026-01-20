@@ -8,7 +8,7 @@ class MemorySimulator:
     def accessPage(self, page):
         self.time += 1
 
-        tlbHit = self.tlb.access(page)
+        tlbHit = self.tlb.accessPage(page)
         pageFault = self.algorithm.accessPage(page)
 
         workingSetSize = 0

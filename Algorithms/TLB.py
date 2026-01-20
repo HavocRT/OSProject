@@ -5,7 +5,7 @@ class TLB:
         self.hits = 0
         self.misses = 0
 
-    def access(self, page):
+    def accessPage(self, page):
         if page in self.entries:
             self.hits += 1
             self.entries.remove(page)
