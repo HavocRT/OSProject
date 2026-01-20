@@ -17,7 +17,7 @@ class Optimal(PageReplacementAlgorithm):
                     if p in future:
                         distances[p] = future.index(p)
                     else:
-                        distances[p] = float('inf')
+                        distances[p] = float("inf")
 
                 victim = max(distances, key=distances.get)
                 self.frames.remove(victim)
