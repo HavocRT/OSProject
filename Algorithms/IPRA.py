@@ -2,8 +2,8 @@ from Algorithms.BaseReplacement import PageReplacementAlgorithm
 from Algorithms.WorkingSetModel import WorkingSetModel
 
 class IPRA(PageReplacementAlgorithm):
-    def __init__(self, frames, windowSize):
-        super().__init__(frames)
+    def __init__(self, frameLimit, windowSize):
+        super().__init__(frameLimit)
         self.workingSet = WorkingSetModel(windowSize)
         self.time = 0
 
@@ -12,7 +12,7 @@ class IPRA(PageReplacementAlgorithm):
         self.workingSet.recordAccess(page, self.time)
 
         if page in self.frames:
-            return False
+            return
 
         if len(self.frames) < self.frameLimit:
             self.frames.append(page)
@@ -20,13 +20,12 @@ class IPRA(PageReplacementAlgorithm):
             self.replacePage(page)
 
         self.pageFaults += 1
-        return True
 
     def replacePage(self, page):
-        workingSet = self.workingSet.getWorkingSet()
+        workingSetPages = self.workingSet.getWorkingSet()
 
         for i, p in enumerate(self.frames):
-            if p not in workingSet:
+            if p not in workingSetPages:
                 self.frames[i] = page
                 return
 
