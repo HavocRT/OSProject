@@ -13,7 +13,7 @@ class TLB:
             return True
 
         self.misses += 1
-        if len(self.entries) >= self.Size:
+        if len(self.entries) >= self.size:
             self.entries.pop(0)
 
         self.entries.append(page)

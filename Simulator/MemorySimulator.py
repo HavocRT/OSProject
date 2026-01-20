@@ -4,7 +4,7 @@ class MemorySimulator:
         self.TLB = tlb
         self.time = 0
 
-    def AccessPage(self, page):
+    def accessPage(self, page):
         self.time += 1
         tlbHit = self.TLB.access(page)
         pageFault = self.algorithm.accessPage(page)

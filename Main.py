@@ -2,7 +2,7 @@ from Algorithms.IPRA import IPRA
 from Algorithms.TLB import TLB
 from Simulator.MemorySimulator import MemorySimulator
 
-ipra = IPRA(frames=3, window_size=4)
+ipra = IPRA(frames=3, windowSize=4)
 tlb = TLB(size=2)
 
 sim = MemorySimulator(ipra, tlb)
