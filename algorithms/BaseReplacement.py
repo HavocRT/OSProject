@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
 class PageReplacementAlgorithm(ABC):
-    def __init__(self, frame_limit):
-        self.frame_limit = frame_limit
+    def __init__(self, frameLimit):
+        self.frameLimit = frameLimit
         self.frames = []
-        self.page_faults = 0
+        self.pageFaults = 0
 
     @abstractmethod
-    def access_page(self, page, time):
+    def AccessPage(self, page, time):
         pass
 
-    def get_page_faults(self):
-        return self.page_faults
+    def GetPageFaults(self):
+        return self.pageFaults
