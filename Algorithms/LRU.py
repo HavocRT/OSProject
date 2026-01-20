@@ -5,7 +5,7 @@ class LRU(PageReplacementAlgorithm):
         super().__init__(frameLimit)
         self.lastUsed = {}
 
-    def AccessPage(self, page, time):
+    def accessPage(self, page, time):
         if page not in self.frames:
             self.pageFaults += 1
 

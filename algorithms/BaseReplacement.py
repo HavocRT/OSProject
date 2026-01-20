@@ -7,8 +7,8 @@ class PageReplacementAlgorithm(ABC):
         self.pageFaults = 0
 
     @abstractmethod
-    def AccessPage(self, page, time):
+    def accessPage(self, page, time):
         pass
 
-    def GetPageFaults(self):
+    def getPageFaults(self):
         return self.pageFaults

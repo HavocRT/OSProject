@@ -1,20 +1,20 @@
 class WorkingSetModel:
-    def __init__(self, window_size):
-        self.WindowSize = window_size
-        self.AccessHistory = []
+    def __init__(self, windowSize):
+        self.windowSize = windowSize
+        self.accessHistory = []
 
-    def RecordAccess(self, page, time):
-        self.AccessHistory.append((time, page))
-        self.AccessHistory = [
-            (t, p) for (t, p) in self.AccessHistory
-            if time - t <= self.WindowSize
+    def recordAccess(self, page, time):
+        self.accessHistory.append((time, page))
+        self.accessHistory = [
+            (t, p) for (t, p) in self.accessHistory
+            if time - t <= self.windowSize
         ]
 
-    def GetWorkingSet(self):
-        return set(p for (_, p) in self.AccessHistory)
+    def getWorkingSet(self):
+        return set(p for (_, p) in self.accessHistory)
 
-    def WorkingSetSize(self):
-        return len(self.GetWorkingSet())
+    def workingSetSize(self):
+        return len(self.getWorkingSet())
 
-    def IsThrashing(self, frame_count):
-        return self.WorkingSetSize() > frame_count
+    def isThrashing(self, frameCount):
+        return self.workingSetSize() > frameCount
