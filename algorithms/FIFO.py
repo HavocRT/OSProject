@@ -6,7 +6,7 @@ class FIFO(PageReplacementAlgorithm):
         super().__init__(frameLimit)
         self.queue = deque()
 
-    def accessPage(self, page, time=None):
+    def accessPage(self, page, time):
         if page not in self.queue:
             self.pageFaults += 1
 
