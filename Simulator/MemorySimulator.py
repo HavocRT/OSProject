@@ -1,25 +1,33 @@
 class MemorySimulator:
-    def __init__(self, algorithm, tlb, logger):
+    def __init__(self, algorithm, tlb=None, logger=None):
         self.algorithm = algorithm
         self.tlb = tlb
         self.logger = logger
         self.time = 0
 
     def accessPage(self, page):
+        faultsBefore = self.algorithm.pageFaults
+
+        if self.tlb is not None:
+            tlbHit = self.tlb.accessPage(page, self.time)
+        else:
+            tlbHit = None
+
+        self.algorithm.accessPage(page, self.time)
+
+        faultOccurred = self.algorithm.pageFaults > faultsBefore
+
+        if self.logger is not None:
+            self.logger.log(
+                time=self.time,
+                page=page,
+                pageFault=faultOccurred,
+                tlbHit=tlbHit,
+                frames=list(self.algorithm.frames)
+            )
+
         self.time += 1
 
-        tlbHit = self.tlb.accessPage(page)
-        pageFault = self.algorithm.accessPage(page)
-
-        workingSetSize = 0
-        if hasattr(self.algorithm, "workingSet"):
-            workingSetSize = self.algorithm.workingSet.workingSetSize()
-
-        self.logger.logStep(
-            self.time,
-            page,
-            pageFault,
-            tlbHit,
-            workingSetSize,
-            self.algorithm.frames
-        )
+    def run(self, referenceString):
+        for page in referenceString:
+            self.accessPage(page)
