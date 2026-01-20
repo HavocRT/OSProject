@@ -14,7 +14,7 @@ class IPRA(PageReplacementAlgorithm):
         if page in self.frames:
             return False
 
-        if len(self.frames) < self.frameCount:
+        if len(self.frames) < self.frameLimit:
             self.frames.append(page)
         else:
             self.replacePage(page)
