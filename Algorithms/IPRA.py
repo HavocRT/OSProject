@@ -11,24 +11,24 @@ class IPRA(PageReplacementAlgorithm):
         self.Time += 1
         self.WorkingSet.RecordAccess(page, self.Time)
 
-        if page in self.Frames:
+        if page in self.frames:
             return False
 
-        if len(self.Frames) < self.FrameCount:
-            self.Frames.append(page)
+        if len(self.frames) < self.frameCount:
+            self.frames.append(page)
         else:
-            self.ReplacePage(page)
+            self.replacePage(page)
 
-        self.PageFaults += 1
+        self.pageFaults += 1
         return True
 
     def ReplacePage(self, page):
         working_set = self.WorkingSet.GetWorkingSet()
 
-        for i, p in enumerate(self.Frames):
+        for i, p in enumerate(self.frames):
             if p not in working_set:
-                self.Frames[i] = page
+                self.frames[i] = page
                 return
 
-        self.Frames.pop(0)
-        self.Frames.append(page)
+        self.frames.pop(0)
+        self.frames.append(page)
