@@ -3,7 +3,7 @@ from Algorithms.TLB import TLB
 from Simulator.MemorySimulator import MemorySimulator
 from Logger.MemoryLogger import MemoryLogger
 
-ipra = IPRA(frameLimit=3, windowSize=4)
+ipra = IPRA(frames=3, windowSize=4)
 tlb = TLB(size=2)
 logger = MemoryLogger()
 
