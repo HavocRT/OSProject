@@ -17,13 +17,19 @@ class MemorySimulator:
 
         faultOccurred = self.algorithm.pageFaults > faultsBefore
 
+        if hasattr(self.algorithm, "workingSet"):
+            workingSetSize = len(self.algorithm.workingSet.getWorkingSet())
+        else:
+            workingSetSize = None
+
         if self.logger is not None:
-            self.logger.log(
+            self.logger.logStep(
                 time=self.time,
                 page=page,
                 pageFault=faultOccurred,
                 tlbHit=tlbHit,
-                frames=list(self.algorithm.frames)
+                workingSetSize=workingSetSize,
+                frames=self.algorithm.frames
             )
 
         self.time += 1

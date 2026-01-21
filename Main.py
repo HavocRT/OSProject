@@ -1,10 +1,10 @@
 import argparse
 
 from Simulator.MemorySimulator import MemorySimulator
-from Simulator.MemoryLogger import MemoryLogger
+from Logger.MemoryLogger import MemoryLogger
 from Workloads.WorkloadGenerator import WorkloadGenerator
-from Analytics.MetricsComputer import MetricsComputer
-from Analytics.PlotGenerator import PlotGenerator
+from Analysis.MetricsAnalyzer import MetricsAnalyzer
+from Analysis.PlotGenerator import PlotGenerator
 
 from Algorithms.FIFO import FIFO
 from Algorithms.LRU import LRU
