@@ -33,12 +33,12 @@ def buildAlgorithm(algoName, frameLimit, referenceString):
 
 def main():
     parser = argparse.ArgumentParser()
-
-    parser.add_argument("--algo", required=True, help="Algorithm: fifo, lru, optimal, ipra")
-    parser.add_argument("--frames", type=int, required=True, help="Number of frames")
-    parser.add_argument("--workload", required=True, help="Workload type: locality, thrashing, mixed")
-    parser.add_argument("--length", type=int, required=True, help="Length of reference string")
-    parser.add_argument("--tlb", type=int, default=0, help="TLB size (0 for no TLB)")
+    
+    parser.add_argument("--algo", required=True) #Algorithm: fifo, lru, optimal, ipra
+    parser.add_argument("--frames", type=int, required=True) #Number of frames
+    parser.add_argument("--workload", required=True) #Workload type: locality, thrashing, mixed
+    parser.add_argument("--length", type=int, required=True) #Length of reference string
+    parser.add_argument("--tlb", type=int, default=0) #TLB size (0 for no TLB)
 
     args = parser.parse_args()
 
