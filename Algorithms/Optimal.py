@@ -1,4 +1,4 @@
-from Algorithms.BaseReplacement import PageReplacementAlgorithm
+from Algorithms.PageReplacementAlgorithm import PageReplacementAlgorithm
 
 class Optimal(PageReplacementAlgorithm):
     def __init__(self, frameLimit, referenceString):

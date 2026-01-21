@@ -1,5 +1,5 @@
 from collections import deque
-from Algorithms.BaseReplacement import PageReplacementAlgorithm
+from Algorithms.PageReplacementAlgorithm import PageReplacementAlgorithm
 
 class FIFO(PageReplacementAlgorithm):
     def __init__(self, frameLimit):

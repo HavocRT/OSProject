@@ -1,4 +1,4 @@
-from Algorithms.BaseReplacement import PageReplacementAlgorithm
+from Algorithms.PageReplacementAlgorithm import PageReplacementAlgorithm
 from Algorithms.WorkingSetModel import WorkingSetModel
 
 class IPRA(PageReplacementAlgorithm):
