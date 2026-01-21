@@ -8,7 +8,7 @@ class IPRA(PageReplacementAlgorithm):
         self.time = 0
 
     def accessPage(self, page, time):
-        self.workingSet.recordAccess(page, self.time)
+        self.workingSet.recordAccess(page, time)
 
         if page in self.frames:
             return

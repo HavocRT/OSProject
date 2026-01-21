@@ -34,11 +34,11 @@ def buildAlgorithm(algoName, frameLimit, referenceString):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--algo", required=True)
-    parser.add_argument("--frames", type=int, required=True)
-    parser.add_argument("--workload", required=True)
-    parser.add_argument("--length", type=int, required=True)
-    parser.add_argument("--tlb", type=int, default=0)
+    parser.add_argument("--algo", required=True, help="Algorithm: fifo, lru, optimal, ipra")
+    parser.add_argument("--frames", type=int, required=True, help="Number of frames")
+    parser.add_argument("--workload", required=True, help="Workload type: locality, thrashing, mixed")
+    parser.add_argument("--length", type=int, required=True, help="Length of reference string")
+    parser.add_argument("--tlb", type=int, default=0, help="TLB size (0 for no TLB)")
 
     args = parser.parse_args()
 
@@ -64,20 +64,44 @@ def main():
 
     simulator.run(referenceString)
 
-    metrics = MetricsComputer.compute(logger.records)
-    MetricsComputer.save(metrics, "output/metrics.txt")
-
-    PlotGenerator.generate(logger.records, outputDir="output")
-
-    print("Simulation completed")
+    analyzer = MetricsAnalyzer(logger.getRecords())
+    
+    totalPageFaults = analyzer.totalPageFaults()
+    pageFaultRate = analyzer.pageFaultRate()
+    
+    # Print results
+    print("\n" + "="*50)
+    print("Simulation Results")
+    print("="*50)
     print(f"Algorithm: {args.algo.upper()}")
     print(f"Frames: {args.frames}")
-    print(f"Accesses: {args.length}")
-    print(f"Page Faults: {metrics['totalPageFaults']}")
-    print(f"Page Fault Rate: {metrics['pageFaultRate']:.3f}")
+    print(f"Reference String Length: {args.length}")
+    print(f"Total Page Faults: {totalPageFaults}")
+    print(f"Page Fault Rate: {pageFaultRate:.3f}")
 
     if tlb is not None:
-        print(f"TLB Hit Rate: {metrics['tlbHitRate']:.3f}")
+        tlbHitRate = analyzer.tlbHitRate()
+        print(f"TLB Hit Rate: {tlbHitRate:.3f}")
+
+    if args.algo.lower() == "ipra":
+        avgWorkingSetSize = analyzer.averageWorkingSetSize()
+        print(f"Average Working Set Size: {avgWorkingSetSize:.2f}")
+
+    print("="*50 + "\n")
+
+    # Generate plots
+    print("Generating plots...")
+    plotter = PlotGenerator(analyzer.getDataFrame())
+    
+    plotter.plotCumulativePageFaults()
+    
+    if tlb is not None:
+        plotter.plotTlbHits()
+    
+    if args.algo.lower() == "ipra":
+        plotter.plotWorkingSetSize()
+
+    print("Simulation completed!")
 
 
 if __name__ == "__main__":
