@@ -8,4 +8,4 @@ It also aims to create a smart page replacement algorithm that can be used in op
 
 # how-to-run
 run the main.py file using the following flags
-python main.py --algo [algorithm_name] --processes [number_of_processes] --frames [number_of_frames]
+python Main.py --algorithms [algorithm_name] --frames [number_of_frames] --workload [type_of_workload] --tau [frame_limit] --tlb-size [size_of_tlb]
