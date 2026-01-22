@@ -18,7 +18,7 @@ class MemorySimulator:
         faultOccurred = self.algorithm.pageFaults > faultsBefore
 
         if hasattr(self.algorithm, "workingSet"):
-            workingSetSize = len(self.algorithm.workingSet.getWorkingSet())
+            workingSetSize = len(self.algorithm.workingSet.getWorkingSet(self.time))
         else:
             workingSetSize = None
 
