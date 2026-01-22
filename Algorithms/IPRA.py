@@ -2,31 +2,35 @@ from Algorithms.PageReplacementAlgorithm import PageReplacementAlgorithm
 from Algorithms.WorkingSetModel import WorkingSetModel
 
 class IPRA(PageReplacementAlgorithm):
-    def __init__(self, frameLimit, windowSize):
+    def __init__(self, frameLimit, tau):
         super().__init__(frameLimit)
-        self.workingSet = WorkingSetModel(windowSize)
-        self.time = 0
-
+        self.tau = tau
+        self.workingSet = WorkingSetModel(tau)
+        self.lastUsed = {}
+        self.frequency = {}
+    
     def accessPage(self, page, time):
         self.workingSet.recordAccess(page, time)
-
-        if page in self.frames:
-            return
-
-        if len(self.frames) < self.frameLimit:
+        
+        if page not in self.frequency:
+            self.frequency[page] = 0
+        self.frequency[page] += 1
+        
+        if page not in self.frames:
+            self.pageFaults += 1
+            
+            if len(self.frames) == self.frameLimit:
+                currentWorkingSet = self.workingSet.getWorkingSet(time)
+                
+                pagesNotInWorkingSet = [p for p in self.frames if p not in currentWorkingSet]
+                
+                if pagesNotInWorkingSet:
+                    victim = min(pagesNotInWorkingSet, key=lambda p: (self.frequency[p], self.lastUsed[p]))
+                else:
+                    victim = min(self.frames, key=lambda p: (self.frequency[p], self.lastUsed[p]))
+                
+                self.frames.remove(victim)
+            
             self.frames.append(page)
-        else:
-            self.replacePage(page)
-
-        self.pageFaults += 1
-
-    def replacePage(self, page):
-        workingSetPages = self.workingSet.getWorkingSet()
-
-        for i, p in enumerate(self.frames):
-            if p not in workingSetPages:
-                self.frames[i] = page
-                return
-
-        self.frames.pop(0)
-        self.frames.append(page)
+        
+        self.lastUsed[page] = time
